@@ -5,11 +5,15 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 4.4"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 2.0"
+    }
   }
 }
-
 provider "azurerm" {
   features {}
+  subscription_id = "your_subscription_id"
 }
 
 # Create a Resource Group
@@ -20,8 +24,8 @@ resource "azurerm_resource_group" "example" {
 
 # Create an Azure Active Directory Group for AKS Admins
 resource "azuread_group" "aks_admins" {
-  display_name     = "aks-admins"
-  mail_nickname    = "aks-admins"
+  display_name = "AKS Admins"
+  mail_enabled     = true
   security_enabled = true
 }
 
