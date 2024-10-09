@@ -12,8 +12,8 @@ terraform {
   }
 }
 provider "azurerm" {
-  features {}
-  subscription_id = "your_subscription_id"
+  subscription_id = var.subscription_id
+  features        {}
 }
 
 # Create a Resource Group
@@ -25,7 +25,6 @@ resource "azurerm_resource_group" "example" {
 # Create an Azure Active Directory Group for AKS Admins
 resource "azuread_group" "aks_admins" {
   display_name = "AKS Admins"
-  mail_enabled     = true
   security_enabled = true
 }
 
@@ -39,7 +38,7 @@ resource "azurerm_kubernetes_cluster" "example" {
   # Azure AD Integration
   azure_active_directory_role_based_access_control {
     azure_rbac_enabled = true
-    admin_group_object_ids = azuread_group.aks_admins.id
+    admin_group_object_ids = [azuread_group.aks_admins.id]
   }
 
   # Identity block
@@ -48,7 +47,7 @@ resource "azurerm_kubernetes_cluster" "example" {
   }
 
   # Choose your preferred Kubernetes version
-  kubernetes_version = "1.31"
+  kubernetes_version = "1.30"
 
   default_node_pool {
     name       = "default"
